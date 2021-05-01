@@ -23,8 +23,8 @@ public enum Ingredient {
     public static Ingredient[] pickTwo() {
         Ingredient[] ingredients = new Ingredient[2];
         Random rand = new Random();
-        int num = rand.nextInt(2);
-        switch(num) {
+        int randomNum = rand.nextInt(2);
+        switch(randomNum) {
             case 0:
                 ingredients[0] = CHEESE;
                 ingredients[1] = BOLOGNA;
