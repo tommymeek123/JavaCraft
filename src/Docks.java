@@ -6,10 +6,14 @@
  * @version May, 2021
  */
 public class Docks {
-    /** Place to store the foodstuff. */
-    private String[] crate;
+    /** A place to store the foodstuffs. */
+    private Ingredient[] supplies;
 
     public Docks() {
-        this.crate = new String[2];
+        this.supplies = new Ingredient[2];
+    }
+
+    public void drop(Ingredient[] supplies) {
+        this.supplies = supplies;
     }
 }
