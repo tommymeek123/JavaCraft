@@ -22,5 +22,53 @@ public class Driver {
      */
     public static void main(String[] args) {
         System.out.println("You must construct additional Pylons.");
+        Driver driver = new Driver();
+        driver.go(args);
+    }
+
+    private void go(String[] args) {
+        validateArgs(args);
+        float time = Float.parseFloat(args[0]);
+        boolean log = args[1].toLowerCase() == "t" ? true : false;
+        Foreman foreman = new Foreman();
+        Docks docks = new Docks();
+        Miner cheeseMiner = new Miner("cheese");
+        Miner breadMiner = new Miner("bread");
+        Miner bolognaMiner = new Miner("bologna");
+        String[] crate = foreman.chooseIngredients();
+        for (int i = 0; i < crate.length; i++) {
+            System.out.println(crate[i]);
+        }
+    }
+
+    private void validateArgs(String[] args) {
+        for (int i = 0; i < args.length; i++) {
+            System.out.println(args[i]);
+        }
+        
+        if (args.length == 0 || args.length > 2) {
+            System.out.println("FIRST");
+            this.usage();
+        }
+        float time = 0;
+        try {
+            time = Float.parseFloat(args[0]);
+        } catch (NumberFormatException nfe) {
+            System.out.println("SECOND");
+            this.usage();
+        }
+        if (!(args[1].toLowerCase().equals("t") || args[1].toLowerCase().equals("f"))) {
+            System.out.println("THIRD");
+            this.usage();
+        }
+        if (args[1].toLowerCase() == "t" && time <= 0) {
+            System.err.println("Error. Cannot log to file infinitely.");
+            System.exit(1);
+        }
+    }
+
+    private void usage() {
+        System.err.println("Usage: java Driver [runtime] [T|F]");
+        System.exit(1);
     }
 }
