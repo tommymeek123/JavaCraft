@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
+
 /**
  * 
  *
@@ -7,13 +10,37 @@
  */
 public class Docks {
     /** A place to store the foodstuffs. */
-    private Ingredient[] supplies;
+    private ArrayList<Ingredient> supplies;
+
+    /** Dinner bell. */
+    private Semaphore bell;
 
     public Docks() {
-        this.supplies = new Ingredient[2];
+        this.supplies = new ArrayList<>();
+        this.bell = new Semaphore(1);
     }
 
-    public void drop(Ingredient[] supplies) {
-        this.supplies = supplies;
+    public void drop(Ingredient[] newSupplies) {
+        this.supplies.add(newSupplies[0]);
+        newSupplies[0].make();
+        this.supplies.add(newSupplies[1]);
+        newSupplies[1].make();
+    }
+
+    public void pickUp(Ingredient ingredient) {
+        ingredient.take();
+        this.supplies.remove(ingredient);
+    }
+
+    public void callForeman() {
+        this.bell.release();
+    }
+
+    public void dinnerTime() {
+        try {
+            this.bell.acquire();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
     }
 }

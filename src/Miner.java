@@ -8,15 +8,21 @@ import java.util.Random;
  * @author Tommy Meek
  * @version May, 2021
  */
-public class Miner {
+public class Miner implements Runnable {
     /**  The ingredient this miner mines.  */
     private Ingredient ingredient;
+
+    /** The ingredients these miners need to make food. */
+    private Ingredient[] needed;
 
     /** Where to log this miner's progress. */
     private PrintStream out;
 
     /** The mining guild with which this miner is affiliated. */
     private String guild;
+
+    /** The docks. */
+    private Docks docks;
 
     /** Maximum sleep time in milliseconds. */
     final static int MAX_SLEEP = 5000;
@@ -27,10 +33,12 @@ public class Miner {
      * @param ingredient The ingredient this miner specializes in mining.
      * @param out The print stream used for logging output.
      */
-    public Miner(Ingredient ingredient, PrintStream out) {
+    public Miner(Ingredient ingredient, PrintStream out, Docks docks) {
         this.ingredient = ingredient;
+        this.needed = ingredient.getOther();
         this.guild = ingredient + " miners";
         this.out = out;
+        this.docks = docks;
     }
 
     public void makeFood() {
@@ -52,5 +60,14 @@ public class Miner {
             ie.printStackTrace();
             System.exit(1);
         }
+    }
+
+    @Override
+    public void run() {
+        this.docks.pickUp(this.needed[0]);
+        this.docks.pickUp(this.needed[1]);
+        this.makeFood();
+        this.eatFood();
+        this.docks.callForeman();
     }
 }

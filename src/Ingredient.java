@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 
 /**
  * An enum representing an ingredient for making a sandwich.
@@ -13,11 +14,34 @@ public enum Ingredient {
     /** The name of the ingredient. */
     private String name;
 
+    /** Signal. */
+    private Semaphore signal;
+
     /**
      * Constructor for the Ingredient enum,
      */
     private Ingredient(String name) {
         this.name = name;
+        this.signal = new Semaphore(0);
+    }
+
+    public Ingredient[] getOther() {
+        Ingredient[] ingredients = new Ingredient[2];
+        switch(this) {
+            case BREAD:
+                ingredients[0] = CHEESE;
+                ingredients[1] = BOLOGNA;
+                break;
+            case CHEESE:
+                ingredients[0] = BREAD;
+                ingredients[1] = BOLOGNA;
+                break;
+            case BOLOGNA:
+                ingredients[0] = CHEESE;
+                ingredients[1] = BREAD;
+                break;
+        }
+        return ingredients;
     }
 
     public static Ingredient[] pickTwo() {
@@ -39,6 +63,18 @@ public enum Ingredient {
                 break;
         }
         return ingredients;
+    }
+
+    public void make() {
+        this.signal.release();
+    }
+
+    public void take() {
+        try {
+            this.signal.acquire();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
     }
 
     public String toString() {

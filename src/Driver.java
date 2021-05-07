@@ -43,7 +43,7 @@ public class Driver {
     }
 
     private static void validateArgs(String[] args) {
-        if (args.length == 0 || args.length > 2) {
+        if (args.length != 2) {
             usage();
         }
         float time = 0;
@@ -55,7 +55,7 @@ public class Driver {
         if (!(args[1].toLowerCase().equals("t") || args[1].toLowerCase().equals("f"))) {
             usage();
         }
-        if (args[1].toLowerCase() == "t" && time <= 0) {
+        if (args[1].toLowerCase().equals("t") && time <= 0) {
             System.err.println("Error. Cannot log to file infinitely.");
             System.exit(1);
         }

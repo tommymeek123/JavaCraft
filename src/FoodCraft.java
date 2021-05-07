@@ -33,16 +33,14 @@ public class FoodCraft {
      */
     public void go() {
         Docks docks = new Docks();
-        Foreman foreman = new Foreman(docks);
-        Miner breadMiner = new Miner(Ingredient.BREAD, this.out);
-        Miner cheeseMiner = new Miner(Ingredient.CHEESE, this.out);
-        Miner bolognaMiner = new Miner(Ingredient.BOLOGNA, this.out);
-        breadMiner.makeFood();
-        cheeseMiner.makeFood();
-        bolognaMiner.makeFood();
-        breadMiner.eatFood();
-        cheeseMiner.eatFood();
-        bolognaMiner.eatFood();
+        Thread foreman = new Thread(new Foreman(docks));
+        Thread breadMiner = new Thread(new Miner(Ingredient.BREAD, this.out, docks));
+        Thread cheeseMiner = new Thread(new Miner(Ingredient.CHEESE, this.out, docks));
+        Thread bolognaMiner = new Thread(new Miner(Ingredient.BOLOGNA, this.out, docks));
+        foreman.start();
+        breadMiner.start();
+        cheeseMiner.start();
+        bolognaMiner.start();
     }
 
 }
