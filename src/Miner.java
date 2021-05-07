@@ -64,10 +64,12 @@ public class Miner implements Runnable {
 
     @Override
     public void run() {
+        System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[0]);
         this.docks.pickUp(this.needed[0]);
+        System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[1]);
         this.docks.pickUp(this.needed[1]);
+        this.docks.callForeman();
         this.makeFood();
         this.eatFood();
-        this.docks.callForeman();
     }
 }

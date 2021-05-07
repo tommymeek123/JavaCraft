@@ -29,16 +29,16 @@ public enum Ingredient {
         Ingredient[] ingredients = new Ingredient[2];
         switch(this) {
             case BREAD:
-                ingredients[0] = CHEESE;
-                ingredients[1] = BOLOGNA;
+                ingredients[0] = BOLOGNA;
+                ingredients[1] = CHEESE;
                 break;
             case CHEESE:
-                ingredients[0] = BREAD;
-                ingredients[1] = BOLOGNA;
+                ingredients[0] = BOLOGNA;
+                ingredients[1] = BREAD;
                 break;
             case BOLOGNA:
-                ingredients[0] = CHEESE;
-                ingredients[1] = BREAD;
+                ingredients[0] = BREAD;
+                ingredients[1] = CHEESE;
                 break;
         }
         return ingredients;
@@ -67,6 +67,7 @@ public enum Ingredient {
 
     public void make() {
         this.signal.release();
+        System.out.println("MAKING " + this);
     }
 
     public void take() {

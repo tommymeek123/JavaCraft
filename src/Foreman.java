@@ -18,6 +18,8 @@ public class Foreman implements Runnable {
 
     public void drop() {
         Ingredient[] supplies = Ingredient.pickTwo();
+        System.out.println("FOREMAN PICKED " + supplies[0]);
+        System.out.println("FOREMAN PICKED " + supplies[1]);
         this.docks.drop(supplies);
     }
 
