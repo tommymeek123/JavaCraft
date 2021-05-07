@@ -12,8 +12,8 @@ public class Miner implements Runnable {
     /**  The ingredient this miner mines.  */
     private Ingredient ingredient;
 
-    /** The ingredients these miners need to make food. */
-    private Ingredient[] needed;
+    // /** The ingredients these miners need to make food. */
+    // private Ingredient[] needed;
 
     /** Where to log this miner's progress. */
     private PrintStream out;
@@ -21,8 +21,12 @@ public class Miner implements Runnable {
     /** The mining guild with which this miner is affiliated. */
     private String guild;
 
-    /** The docks. */
-    private Docks docks;
+    // /** The docks. */
+    // private Docks docks;
+
+    private Messenger messenger;
+
+    private Foreman foreman;
 
     /** Maximum sleep time in milliseconds. */
     final static int MAX_SLEEP = 5000;
@@ -33,12 +37,14 @@ public class Miner implements Runnable {
      * @param ingredient The ingredient this miner specializes in mining.
      * @param out The print stream used for logging output.
      */
-    public Miner(Ingredient ingredient, PrintStream out, Docks docks) {
+    public Miner(Ingredient ingredient, PrintStream out, Messenger messenger, Foreman foreman) {
         this.ingredient = ingredient;
-        this.needed = ingredient.getOther();
+        //this.needed = ingredient.getOther();
         this.guild = ingredient + " miners";
         this.out = out;
-        this.docks = docks;
+        //this.docks = docks;
+        this.messenger = messenger;
+        this.foreman = foreman;
     }
 
     public void makeFood() {
@@ -64,11 +70,12 @@ public class Miner implements Runnable {
 
     @Override
     public void run() {
-        System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[0]);
-        this.docks.pickUp(this.needed[0]);
-        System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[1]);
-        this.docks.pickUp(this.needed[1]);
-        this.docks.callForeman();
+        // System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[0]);
+        // this.docks.pickUp(this.needed[0]);
+        // System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[1]);
+        // this.docks.pickUp(this.needed[1]);
+        this.messenger.waitForFood();
+        this.foreman.getFood();
         this.makeFood();
         this.eatFood();
     }

@@ -17,17 +17,8 @@ public class Docks {
 
     private Semaphore messengerSignal;
 
-    private Messenger cheeseMessenger;
-
-    private Messenger breadMessenger;
-
-    private Messenger bolognaMessenger;
-
     public Docks() {
         this.supplies = new ArrayList<>();
-        this.cheeseMessenger = Messenger.CHEESE;
-        this.breadMessenger = Messenger.BREAD;
-        this.bolognaMessenger = Messenger.BOLOGNA;
         this.bell = new Semaphore(0);
         this.messengerSignal = new Semaphore(0);
     }
@@ -39,23 +30,23 @@ public class Docks {
         newSupplies[1].make();
     }
 
-    public void pickUp(Ingredient ingredient) {
+    public boolean pickUp(Ingredient ingredient) {
         ingredient.take();
-        System.out.println(Thread.currentThread().getId() + " IS PICKING UP " + ingredient);
-        this.supplies.remove(ingredient);
+        System.out.println(Thread.currentThread().getId() + " IS TRYING TO PICK UP " + ingredient);
+        return this.supplies.remove(ingredient);
     }
 
     public void callForeman() {
         this.bell.release();
     }
 
-    public void dinnerTime() {
-        try {
-            this.bell.acquire();
-        } catch (InterruptedException ie) {
-            ie.printStackTrace();
-        }
-    }
+    // public void dinnerTime() {
+    //     try {
+    //         this.bell.acquire();
+    //     } catch (InterruptedException ie) {
+    //         ie.printStackTrace();
+    //     }
+    // }
 
     // public void waitForForeman() {
     //     try {

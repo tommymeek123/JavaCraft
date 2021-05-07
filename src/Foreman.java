@@ -1,3 +1,5 @@
+import java.util.concurrent.Semaphore;
+
 /**
  * 
  *
@@ -9,11 +11,14 @@ public class Foreman implements Runnable {
     /** The docks this foreman oversees. */
     private Docks docks;
 
+    private Semaphore foodRequest;
+
     /**
      * Constructor for the Foreman.
      */
     public Foreman(Docks docks) {
         this.docks = docks;
+        this.foodRequest = new Semaphore(0);
     }
 
     public void drop() {
@@ -23,11 +28,19 @@ public class Foreman implements Runnable {
         this.docks.drop(supplies);
     }
 
+    public void getFood() {
+        this.foodRequest.release();
+    }
+
     @Override
     public void run() {
         while (true) {
             this.drop();
-            this.docks.dinnerTime();
+            try {
+                this.foodRequest.acquire();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
         }
     }
 }
