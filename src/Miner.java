@@ -1,4 +1,3 @@
-import java.io.PrintStream;
 import java.util.Random;
 
 /**
@@ -9,24 +8,11 @@ import java.util.Random;
  * @version May, 2021
  */
 public class Miner implements Runnable {
-    /**  The ingredient this miner mines.  */
-    private Ingredient ingredient;
-
-    // /** The ingredients these miners need to make food. */
-    // private Ingredient[] needed;
-
-    /** Where to log this miner's progress. */
-    private PrintStream out;
-
     /** The mining guild with which this miner is affiliated. */
-    private String guild;
+    private Ingredient guild;
 
-    // /** The docks. */
-    // private Docks docks;
-
-    private Messenger messenger;
-
-    private Foreman foreman;
+    /** The docks. */
+    private Docks docks;
 
     /** Maximum sleep time in milliseconds. */
     final static int MAX_SLEEP = 5000;
@@ -37,14 +23,9 @@ public class Miner implements Runnable {
      * @param ingredient The ingredient this miner specializes in mining.
      * @param out The print stream used for logging output.
      */
-    public Miner(Ingredient ingredient, PrintStream out, Messenger messenger, Foreman foreman) {
-        this.ingredient = ingredient;
-        //this.needed = ingredient.getOther();
-        this.guild = ingredient + " miners";
-        this.out = out;
-        //this.docks = docks;
-        this.messenger = messenger;
-        this.foreman = foreman;
+    public Miner(Ingredient guild, Docks docks) {
+        this.guild = guild;
+        this.docks = docks;
     }
 
     public void makeFood() {
@@ -59,7 +40,7 @@ public class Miner implements Runnable {
         Random rand = new Random();
         int sleepTime = rand.nextInt(MAX_SLEEP);
         long id = Thread.currentThread().getId();
-        this.out.println(this.guild + ":(" + id + ") are " + activity + " Wait(" + sleepTime + ")");
+        this.docks.log(this.guild + " miners:(" + id + ") are " + activity + " Wait(" + sleepTime + ")");
         try {
             Thread.sleep(sleepTime);
         } catch (InterruptedException ie) {
@@ -70,13 +51,16 @@ public class Miner implements Runnable {
 
     @Override
     public void run() {
+        while (true) {
+            this.guild.receive();
+            this.docks.callForeman();
+            this.makeFood();
+            this.eatFood();
+        }
         // System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[0]);
         // this.docks.pickUp(this.needed[0]);
         // System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[1]);
         // this.docks.pickUp(this.needed[1]);
-        this.messenger.waitForFood();
-        this.foreman.getFood();
-        this.makeFood();
-        this.eatFood();
+
     }
 }

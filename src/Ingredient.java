@@ -14,18 +14,21 @@ public enum Ingredient {
     /** The name of the ingredient. */
     private String name;
 
-    /** Signal. */
-    private Semaphore signal;
+    /** Signal that the foreman sends to the messengers to indicate food has been dropped off. */
+    private Semaphore foremanToMessengerSignal;
+
+    /** Signal that the messengers send to the miners to indicate food has been delivered. */
+    private Semaphore messengerToMinerSignal;
 
     /**
      * Constructor for the Ingredient enum,
      */
     private Ingredient(String name) {
         this.name = name;
-        this.signal = new Semaphore(0);
+        this.foremanToMessengerSignal = new Semaphore(0);
     }
 
-    public Ingredient[] getOther() {
+    public Ingredient[] getOthers() {
         Ingredient[] ingredients = new Ingredient[2];
         switch(this) {
             case BREAD:
@@ -42,6 +45,18 @@ public enum Ingredient {
                 break;
         }
         return ingredients;
+    }
+
+    public Ingredient getOtherOne(Ingredient second) {
+        Ingredient result = null;
+        if (this == CHEESE && second == BREAD || this == BREAD && second == CHEESE) {
+            result = BOLOGNA;
+        } else if (this == BREAD && second == BOLOGNA || this == BOLOGNA && second == BREAD) {
+            result = CHEESE;
+        } else {
+            result = BREAD;
+        }
+        return result;
     }
 
     public static Ingredient[] pickTwo() {
@@ -65,19 +80,35 @@ public enum Ingredient {
         return ingredients;
     }
 
-    public void make() {
-        this.signal.release();
-        System.out.println("MAKING " + this);
+    public void dropOff() {
+        this.foremanToMessengerSignal.release();
     }
 
-    public void take() {
+    public void pickUp() {
         try {
-            this.signal.acquire();
+            this.foremanToMessengerSignal.acquire();
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
     }
 
+    public void deliver() {
+        this.messengerToMinerSignal.release();
+    }
+
+    public void receive() {
+        try {
+            this.messengerToMinerSignal.acquire();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+    }
+
+    /**
+     * Generates a String representation of this enum.
+     * 
+     * @return a String representation of this enum.
+     */
     public String toString() {
         return this.name;
     }

@@ -1,3 +1,4 @@
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -9,58 +10,60 @@ import java.util.concurrent.Semaphore;
  * @version May, 2021
  */
 public class Docks {
+    /** The print stream used for logging output. */
+    private PrintStream out;
+
     /** A place to store the foodstuffs. */
     private ArrayList<Ingredient> supplies;
 
-    /** Dinner bell. */
-    private Semaphore bell;
+    /** The foreman waits on this signal to drop food off at the docks. */
+    private Semaphore hungryMinerAlert;
 
-    private Semaphore messengerSignal;
+    private Semaphore outputMutex;
 
-    public Docks() {
+    /**
+     * Constructor for the Docks.
+     * 
+     * @param out The print stream used for logging output.
+     */
+    public Docks(PrintStream out) {
         this.supplies = new ArrayList<>();
-        this.bell = new Semaphore(0);
-        this.messengerSignal = new Semaphore(0);
+        this.hungryMinerAlert = new Semaphore(0);
+        this.outputMutex = new Semaphore(1);
     }
 
     public void drop(Ingredient[] newSupplies) {
         this.supplies.add(newSupplies[0]);
-        newSupplies[0].make();
+        newSupplies[0].dropOff();
         this.supplies.add(newSupplies[1]);
-        newSupplies[1].make();
+        newSupplies[1].dropOff();
     }
 
     public boolean pickUp(Ingredient ingredient) {
-        ingredient.take();
-        System.out.println(Thread.currentThread().getId() + " IS TRYING TO PICK UP " + ingredient);
+        ingredient.pickUp();
+        //System.out.println(Thread.currentThread().getId() + " IS TRYING TO PICK UP " + ingredient);
         return this.supplies.remove(ingredient);
     }
 
     public void callForeman() {
-        this.bell.release();
+        this.hungryMinerAlert.release();
     }
 
-    // public void dinnerTime() {
-    //     try {
-    //         this.bell.acquire();
-    //     } catch (InterruptedException ie) {
-    //         ie.printStackTrace();
-    //     }
-    // }
+    public void waitForMiners() {
+        try {
+            this.hungryMinerAlert.acquire();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+    }
 
-    // public void waitForForeman() {
-    //     try {
-    //         this.messengerSignal.acquire();
-    //     } catch (InterruptedException ie) {
-    //         ie.printStackTrace();
-    //     }
-    // }
-
-    // public void sendMessenger(Ingredient ingredient) {
-    //     switch(ingredient) {
-    //         case CHEESE:
-    //             this.cheeseMessenger
-                
-    //     }
-    // }
+    public void log(String logEntry) {
+        try {
+            this.outputMutex.acquire();
+            this.out.println(logEntry);
+            this.outputMutex.release();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+    }
 }

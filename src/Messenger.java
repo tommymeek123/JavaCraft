@@ -13,42 +13,60 @@ public class Messenger implements Runnable {
     /** The miner's guild this messenger works with. */
     private Ingredient guild;
 
-    /** The ingredients this messenger is waiting on. */
-    private Ingredient[] needed;
-
-    private Semaphore dinnerBell;
+    /** The ingredient this messenger is waiting on. */
+    private Ingredient job;
 
     /** The docks. */
     private Docks docks;
 
-    /**  */
-    private static ArrayList<Ingredient> sharedFood = new ArrayList<>();
+    /** Memory shared between al messengers. */
+    private static ArrayList<Ingredient> breakroom = new ArrayList<>();
 
-    public Messenger(Ingredient guild, Docks docks) {
+    private static Semaphore breakroomKey = new Semaphore(1);
+
+    public Messenger(Ingredient guild, Ingredient job, Docks docks) {
         this.guild = guild;
+        this.job = job;
         this.docks = docks;
-        this.dinnerBell = new Semaphore(0);
     }
 
-    public void waitForFood() {
+    private boolean storeFood(Ingredient food) {
+        boolean result = false;
         try {
-            this.dinnerBell.acquire();
+            breakroomKey.acquire();
+            result = breakroom.add(food);
+            breakroomKey.release();
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
+        return result;
+    }
+
+    private boolean takeFood(Ingredient food) {
+        boolean result = false;
+        try {
+            breakroomKey.acquire();
+            result = breakroom.remove(food);
+            breakroomKey.release();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+        return result;
     }
 
     @Override
     public void run() {
-        System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[0]);
-        if (this.docks.pickUp(this.needed[0])) {
-            if (sharedFood.remove(this.needed[1])) {
-                this.dinnerBell.release();
-            } else {
-                sharedFood.add(needed[0]);
+        while(true) {
+            //System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[0]);
+            if (this.docks.pickUp(this.job)) {
+                Ingredient otherNeeded = this.guild.getOtherOne(this.job);
+                if (this.takeFood(otherNeeded)) {
+                    this.guild.deliver();
+                } else {
+                    this.storeFood(this.job);
+                }
             }
+            //System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[1]);
         }
-        System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[1]);
-        this.docks.pickUp(this.needed[1]);
     }
 }
