@@ -64,7 +64,7 @@ public class Miner implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while ( ! Thread.currentThread().isInterrupted()) {
             this.guild.receive();
             this.hornOfForemanSummoning.release();
             this.makeFood();

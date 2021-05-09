@@ -57,8 +57,8 @@ public class Messenger implements Runnable {
 
     @Override
     public void run() {
-        while(true) {
-            this.guild.pickUp();
+        while ( ! Thread.currentThread().isInterrupted()) {
+            this.priority1.pickUp();
             this.coordinateDelivery();
         }
     }

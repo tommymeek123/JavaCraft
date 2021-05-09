@@ -34,7 +34,7 @@ public class Foreman implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while ( ! Thread.currentThread().isInterrupted()) {
             this.drop();
             this.listenForMiners();
         }
