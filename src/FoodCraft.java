@@ -1,4 +1,5 @@
 import java.io.PrintStream;
+import java.util.concurrent.Semaphore;
 
 /**
  * The controller class for the FoodCraft mining operation.
@@ -32,27 +33,22 @@ public class FoodCraft {
      * Controller method for this simulation.
      */
     public void go() {
-        Docks docks = new Docks(this.out);
-        Thread foreman = new Thread(new Foreman(docks));
-        Thread breadMessenger = new Thread(new Messenger(Food.BREAD, docks));
-        //Thread breadMessenger2 = new Thread(new Messenger(Ingredient.BREAD, Ingredient.BOLOGNA, docks));
-        Thread cheeseMessenger = new Thread(new Messenger(Food.CHEESE, docks));
-        //Thread cheeseMessenger2 = new Thread(new Messenger(Ingredient.CHEESE, Ingredient.BREAD, docks));
-        Thread bolognaMessenger = new Thread(new Messenger(Food.BOLOGNA, docks));
-        //Thread bolognaMessenger2 = new Thread(new Messenger(Ingredient.BOLOGNA, Ingredient.CHEESE, docks));
-        Thread breadMiner = new Thread(new Miner(Food.BREAD, docks));
-        Thread cheeseMiner = new Thread(new Miner(Food.CHEESE, docks));
-        Thread bolognaMiner = new Thread(new Miner(Food.BOLOGNA, docks));
+        Semaphore hungryMiners = new Semaphore(0);
+        Semaphore outputMutex = new Semaphore(1);
+        Semaphore docksKey = new Semaphore(1);
+        Thread foreman = new Thread(new Foreman(hungryMiners));
+        Thread breadMessenger = new Thread(new Messenger(Food.BREAD, docksKey));
+        Thread cheeseMessenger = new Thread(new Messenger(Food.CHEESE, docksKey));
+        Thread bolognaMessenger = new Thread(new Messenger(Food.BOLOGNA, docksKey));
+        Thread breadMiner = new Thread(new Miner(Food.BREAD, this.out, outputMutex, hungryMiners));
+        Thread cheeseMiner = new Thread(new Miner(Food.CHEESE, this.out, outputMutex, hungryMiners));
+        Thread bolognaMiner = new Thread(new Miner(Food.BOLOGNA, this.out, outputMutex, hungryMiners));
         foreman.start();
         breadMessenger.start();
-        //breadMessenger2.start();
         cheeseMessenger.start();
-        //cheeseMessenger2.start();
         bolognaMessenger.start();
-        //bolognaMessenger2.start();
         breadMiner.start();
         cheeseMiner.start();
         bolognaMiner.start();
     }
-
 }

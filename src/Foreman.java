@@ -1,3 +1,5 @@
+import java.util.concurrent.Semaphore;
+
 /**
  * 
  *
@@ -7,27 +9,34 @@
  */
 public class Foreman implements Runnable {
     /** The docks this foreman oversees. */
-    private Docks docks;
+    private Semaphore hungryMiners;
 
     /**
      * Constructor for the Foreman.
      */
-    public Foreman(Docks docks) {
-        this.docks = docks;
+    public Foreman(Semaphore mutex) {
+        this.hungryMiners = mutex;
     }
 
     public void drop() {
         Food[] supplies = Food.pickTwo();
-        //System.out.println("\nForeman picks " + supplies[0] + " and " + supplies[1]);
-        this.docks.drop(supplies);
+        supplies[0].dropOff();
+        supplies[1].dropOff();
+    }
+
+    private void listenForMiners() {
+        try {
+            this.hungryMiners.acquire();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
-        //System.out.println(Thread.currentThread().getId() + ": Foreman");
         while (true) {
             this.drop();
-            this.docks.waitForMiners();
+            this.listenForMiners();
         }
     }
 }
