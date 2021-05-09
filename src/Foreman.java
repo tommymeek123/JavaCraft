@@ -17,14 +17,14 @@ public class Foreman implements Runnable {
     }
 
     public void drop() {
-        Ingredient[] supplies = Ingredient.pickTwo();
-        System.out.println("\nForeman picks " + supplies[0] + " and " + supplies[1]);
+        Food[] supplies = Food.pickTwo();
+        //System.out.println("\nForeman picks " + supplies[0] + " and " + supplies[1]);
         this.docks.drop(supplies);
     }
 
     @Override
     public void run() {
-        System.out.println(Thread.currentThread().getId() + ": Foreman");
+        //System.out.println(Thread.currentThread().getId() + ": Foreman");
         while (true) {
             this.drop();
             this.docks.waitForMiners();

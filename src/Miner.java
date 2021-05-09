@@ -9,7 +9,7 @@ import java.util.Random;
  */
 public class Miner implements Runnable {
     /** The mining guild with which this miner is affiliated. */
-    private Ingredient guild;
+    private Food guild;
 
     /** The docks. */
     private Docks docks;
@@ -23,7 +23,7 @@ public class Miner implements Runnable {
      * @param ingredient The ingredient this miner specializes in mining.
      * @param out The print stream used for logging output.
      */
-    public Miner(Ingredient guild, Docks docks) {
+    public Miner(Food guild, Docks docks) {
         this.guild = guild;
         this.docks = docks;
     }
@@ -51,7 +51,7 @@ public class Miner implements Runnable {
 
     @Override
     public void run() {
-        System.out.println(Thread.currentThread().getId() + ": " + this.guild + " miners");
+        //System.out.println(Thread.currentThread().getId() + ": " + this.guild + " miners");
         while (true) {
             this.guild.receive();
             this.docks.callForeman();

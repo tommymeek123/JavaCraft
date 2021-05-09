@@ -11,27 +11,46 @@ import java.util.concurrent.Semaphore;
 public class Messenger implements Runnable {
 
     /** The miner's guild this messenger works with. */
-    private Ingredient guild;
+    private Food guild;
 
     /** The ingredient this messenger is waiting on from the foreman. */
-    private Ingredient job;
+    private Food priority1;
 
     /** The docks. */
     private Docks docks;
 
-    private Ingredient otherNeeded;
+    /** The other ingredient this messenger is waiting on. */
+    private Food priority2;
 
-    /** Memory shared between all messengers. */
-    private static ArrayList<Ingredient> breakroom = new ArrayList<>();
+    // /** Memory shared between all messengers. */
+    // private static ArrayList<Ingredient> breakroom = new ArrayList<>();
 
-    private static Semaphore breakroomKey = new Semaphore(1);
+    // private static Semaphore breakroomKey = new Semaphore(1);
 
-    public Messenger(Ingredient guild, Ingredient job, Docks docks) {
+    public Messenger(Food guild, Docks docks) {
         this.guild = guild;
-        this.job = job;
-        this.otherNeeded = this.guild.getOtherOne(this.job);
+        this.priority1 = guild.getOthers()[0];
+        this.priority2 = guild.getOthers()[1];
         this.docks = docks;
     }
+
+    @Override
+    public void run() {
+        //System.out.println(Thread.currentThread().getId() + ": " + this.guild + " messenger wants " + this.priority1);
+        while(true) {
+            this.priority1.pickUp();
+            if (this.priority2.checkBreakroom()) {
+                this.priority2.getFromBreakroom();
+                this.guild.deliver();
+            } else {
+                this.priority1.putInBreakroom();
+            }
+        }
+    }
+    
+    // private boolean checkForSecondFood() {
+    //     return this.guild.checkBreakroom();
+    // }
 
     // private boolean storeFood(Ingredient food) {
     //     boolean result = false;
@@ -66,28 +85,28 @@ public class Messenger implements Runnable {
     //     return result;
     // }
 
-    private boolean enterBreakroom() {
-        boolean result = false;
-        try {
-            System.out.println(Thread.currentThread().getId() + " blocks waiting for the breakroom key in Messenger.enterBreakroom()");
-            breakroomKey.acquire();
-            System.out.println(Thread.currentThread().getId() + " will try removing " + this.otherNeeded + " from the break room in Messenger.enterBreakroom()");
-            if (breakroom.remove(this.otherNeeded)) {
-                System.out.println(Thread.currentThread().getId() + " removed " + this.otherNeeded + " from the breakroom in Messenger.enterBreakroom()");
-                result = true;
-            } else {
-                System.out.println(Thread.currentThread().getId() + " could not find " + this.otherNeeded + " in the breakroom in Messenger.enterBreakroom()");
-                breakroom.add(this.job);
-                System.out.println(Thread.currentThread().getId() + " added " + this.job + " to the breakroom in Messenger.enterBreakroom()");
-            }
-            System.out.println(Thread.currentThread().getId() + " is about to release the breakroom key in Messenger.enterBreakroom()");
-            breakroomKey.release();
-            System.out.println(Thread.currentThread().getId() + " just released the breakroom key in Messenger.enterBreakroom()");
-        } catch (InterruptedException ie) {
-            ie.printStackTrace();
-        }
-        return result;
-    }
+    // private boolean enterBreakroom() {
+    //     boolean result = false;
+    //     try {
+    //         System.out.println(Thread.currentThread().getId() + " blocks waiting for the breakroom key in Messenger.enterBreakroom()");
+    //         breakroomKey.acquire();
+    //         System.out.println(Thread.currentThread().getId() + " will try removing " + this.priority2 + " from the break room in Messenger.enterBreakroom()");
+    //         if (breakroom.remove(this.priority2)) {
+    //             System.out.println(Thread.currentThread().getId() + " removed " + this.priority2 + " from the breakroom in Messenger.enterBreakroom()");
+    //             result = true;
+    //         } else {
+    //             System.out.println(Thread.currentThread().getId() + " could not find " + this.priority2 + " in the breakroom in Messenger.enterBreakroom()");
+    //             breakroom.add(this.priority1);
+    //             System.out.println(Thread.currentThread().getId() + " added " + this.priority1 + " to the breakroom in Messenger.enterBreakroom()");
+    //         }
+    //         System.out.println(Thread.currentThread().getId() + " is about to release the breakroom key in Messenger.enterBreakroom()");
+    //         breakroomKey.release();
+    //         System.out.println(Thread.currentThread().getId() + " just released the breakroom key in Messenger.enterBreakroom()");
+    //     } catch (InterruptedException ie) {
+    //         ie.printStackTrace();
+    //     }
+    //     return result;
+    // }
 
     // @Override
     // public void run() {
@@ -119,11 +138,4 @@ public class Messenger implements Runnable {
     //     }
     // }
 
-    @Override
-    public void run() {
-        System.out.println(Thread.currentThread().getId() + ": " + this.guild + " messenger wants " + this.job);
-        while(true) {
-            this.job.pickUp();
-        }
-    }
 }
