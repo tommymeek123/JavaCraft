@@ -51,13 +51,13 @@ public class Miner implements Runnable {
 
     @Override
     public void run() {
+        System.out.println(Thread.currentThread().getId() + ": " + this.guild + " miners");
         while (true) {
             this.guild.receive();
             this.docks.callForeman();
             this.makeFood();
             this.eatFood();
         }
-        // System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[0]);
         // this.docks.pickUp(this.needed[0]);
         // System.out.println(this.guild + " (" + Thread.currentThread().getId() + ") WANT " + this.needed[1]);
         // this.docks.pickUp(this.needed[1]);

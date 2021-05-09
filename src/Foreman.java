@@ -1,5 +1,3 @@
-import java.util.concurrent.Semaphore;
-
 /**
  * 
  *
@@ -20,13 +18,13 @@ public class Foreman implements Runnable {
 
     public void drop() {
         Ingredient[] supplies = Ingredient.pickTwo();
-        // System.out.println("FOREMAN PICKED " + supplies[0]);
-        // System.out.println("FOREMAN PICKED " + supplies[1]);
+        System.out.println("\nForeman picks " + supplies[0] + " and " + supplies[1]);
         this.docks.drop(supplies);
     }
 
     @Override
     public void run() {
+        System.out.println(Thread.currentThread().getId() + ": Foreman");
         while (true) {
             this.drop();
             this.docks.waitForMiners();

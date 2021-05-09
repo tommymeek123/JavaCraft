@@ -20,12 +20,16 @@ public enum Ingredient {
     /** Signal that the messengers send to the miners to indicate food has been delivered. */
     private Semaphore messengerToMinerSignal;
 
+    private Semaphore breakroom;
+
     /**
      * Constructor for the Ingredient enum,
      */
     private Ingredient(String name) {
         this.name = name;
         this.foremanToMessengerSignal = new Semaphore(0);
+        this.messengerToMinerSignal = new Semaphore(0);
+        this.breakroom = new Semaphore(0);
     }
 
     public Ingredient[] getOthers() {
@@ -62,7 +66,7 @@ public enum Ingredient {
     public static Ingredient[] pickTwo() {
         Ingredient[] ingredients = new Ingredient[2];
         Random rand = new Random();
-        int randomNum = rand.nextInt(2);
+        int randomNum = rand.nextInt(3);
         switch(randomNum) {
             case 0:
                 ingredients[0] = CHEESE;
@@ -81,24 +85,44 @@ public enum Ingredient {
     }
 
     public void dropOff() {
-        this.foremanToMessengerSignal.release();
+        System.out.println(Thread.currentThread().getId() + " is about to send a release signal in Ingredient.dropOff()");
+        this.foremanToMessengerSignal.release(1);
+        System.out.println(Thread.currentThread().getId() + " just sent a release signal in Ingredient.dropOff()");
     }
 
     public void pickUp() {
         try {
+            System.out.println(Thread.currentThread().getId() + " blocks in Ingredient.pickUp()");
             this.foremanToMessengerSignal.acquire();
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
+        System.out.println(Thread.currentThread().getId() + " is finishing Ingredient.pickUp()");
     }
 
     public void deliver() {
+        System.out.println(Thread.currentThread().getId() + " is about to send a release signal in Ingredient.deliver()");
         this.messengerToMinerSignal.release();
+        System.out.println(Thread.currentThread().getId() + " just sent a release signal in Ingredient.deliver()");
     }
 
     public void receive() {
         try {
+            System.out.println(Thread.currentThread().getId() + " blocks in Ingredient.receive()");
             this.messengerToMinerSignal.acquire();
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+        System.out.println(Thread.currentThread().getId() + " is finishing Ingredient.receive()");
+    }
+
+    private void putInBreakroom() {
+        this.breakroom.release();
+    }
+
+    private void getFromBreakroom() {
+        try {
+            this.breakroom.acquire();
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
