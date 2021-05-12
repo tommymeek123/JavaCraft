@@ -70,7 +70,9 @@ public class Miner implements Runnable {
             this.outputMutex.release();
             Thread.sleep(sleepTime);
         } catch (InterruptedException ie) {
-            ie.printStackTrace();
+            //ie.printStackTrace();
+            //System.out.println("Miners Interrupted");
+            System.exit(0);
         }
     }
 
