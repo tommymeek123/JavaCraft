@@ -112,7 +112,6 @@ public enum Food {
         try {
             this.foremanToMessengerSignal.acquire();
         } catch (InterruptedException ie) {
-            //ie.printStackTrace();
             System.exit(0);
         }
     }
@@ -131,8 +130,6 @@ public enum Food {
         try {
             this.messengerToMinerSignal.acquire();
         } catch (InterruptedException ie) {
-            //ie.printStackTrace();
-            //System.out.println("Messenger to Miner signal interrupted");
             System.exit(0);
         }
     }
@@ -146,7 +143,7 @@ public enum Food {
     }
 
     /**
-     * Method to get Food in common room
+     * Method to get Food in common room if it is there
      * @return true if food was found, false otherwise
      */
     public boolean findInCommonRoom() {
@@ -167,7 +164,7 @@ public enum Food {
         try {
             this.commonRoom.acquire();
         } catch (InterruptedException ie) {
-            ie.printStackTrace();
+            System.exit(0);
         }
     }
 

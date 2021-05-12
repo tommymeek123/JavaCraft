@@ -59,11 +59,12 @@ public class Miner implements Runnable {
         int sleepTime = rand.nextInt(MAX_SLEEP);
         long id = Thread.currentThread().getId();
         try {
-            this.out.println(this.guild + " miners:(" + id + ") are " + activity + " Wait(" + sleepTime + ")");
+            this.out.println(this.guild + " miners:(" + id + ") have started " + activity
+                    + " Wait(" + sleepTime + ")");
             Thread.sleep(sleepTime);
+            this.out.println(this.guild + " miners:(" + id + ") have finished" +
+                    " " + activity + " Wait(" + sleepTime + ")");
         } catch (InterruptedException ie) {
-            //ie.printStackTrace();
-            //System.out.println("Miners Interrupted");
             System.exit(0);
         }
     }
@@ -74,7 +75,12 @@ public class Miner implements Runnable {
     @Override
     public void run() {
         while ( ! Thread.currentThread().isInterrupted()) {
+            this.out.println("\n" + this.guild + " miners are waiting for " +
+                "food\n");
             this.guild.receive();
+            this.out.println(this.guild + " miners got their food and " +
+                    "are calling " +
+                    "the foreman");
             this.hornOfForemanSummoning.release();
             this.makeFood();
             this.eatFood();
