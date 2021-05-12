@@ -135,8 +135,8 @@ public enum Food {
     }
 
     /**
-     *
-     * @return true if Messengers
+     * Checks for food at docks and common room
+     * @return true if Messengers find food
      */
     public boolean find() {
         return this.foremanToMessengerSignal.tryAcquire() || this.commonRoom.tryAcquire();
@@ -144,7 +144,7 @@ public enum Food {
 
     /**
      * Method to get Food in common room
-     * @return
+     * @return true if food was found, false otherwise
      */
     public boolean findInCommonRoom() {
         return this.commonRoom.tryAcquire();

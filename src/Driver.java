@@ -42,6 +42,10 @@ public class Driver {
         sim.go();
     }
 
+    /**
+     * Method to check if command line arguments are what is needed
+     * @param args arguments to check
+     */
     private static void validateArgs(String[] args) {
         if (args.length != 2) {
             usage();
@@ -61,6 +65,9 @@ public class Driver {
         }
     }
 
+    /**
+     * Method to print usage message
+     */
     private static void usage() {
         System.err.println("Usage: java Driver [runtime] [T|F]");
         System.exit(1);

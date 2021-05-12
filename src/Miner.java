@@ -3,7 +3,7 @@ import java.util.Random;
 import java.util.concurrent.Semaphore;
 
 /**
- * 
+ * Class to represent the Miners
  *
  * @author Brett Dale
  * @author Tommy Meek

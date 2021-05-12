@@ -1,7 +1,7 @@
 import java.util.concurrent.Semaphore;
 
 /**
- * 
+ * Class to represent the Foreman
  *
  * @author Brett Dale
  * @author Tommy Meek
