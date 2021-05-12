@@ -14,10 +14,7 @@ public class Miner implements Runnable {
     private Food guild;
 
     /** The print stream used for logging output. */
-    private PrintStream out;
-
-    /** A mutex that ensures only one thread writes to the PrintStream at a time. */
-    private Semaphore outputMutex;
+    private ProtectedOutputStream out;
 
     /** A +1 magical horn that, when blown, will summon a level 12 Foreman with a feast. */
     private Semaphore hornOfForemanSummoning;
@@ -27,16 +24,13 @@ public class Miner implements Runnable {
 
     /**
      * Constructor for the miner.
-     * 
-     * @param guild The food this miner specializes in mining.
+     *  @param guild The food this miner specializes in mining.
      * @param out The print stream used for logging output.
      * @param horn A +1 magical horn that, when blown, will summon a level 12 Foreman with a feast.
-     * @param outputMutex A mutex that ensures only one thread writes to the PrintStream at a time.
      */
-    public Miner(Food guild, PrintStream out, Semaphore outputMutex, Semaphore horn) {
+    public Miner(Food guild, ProtectedOutputStream out, Semaphore horn) {
         this.guild = guild;
         this.out = out;
-        this.outputMutex = outputMutex;
         this.hornOfForemanSummoning = horn;
     }
 
@@ -65,9 +59,7 @@ public class Miner implements Runnable {
         int sleepTime = rand.nextInt(MAX_SLEEP);
         long id = Thread.currentThread().getId();
         try {
-            this.outputMutex.acquire();
             this.out.println(this.guild + " miners:(" + id + ") are " + activity + " Wait(" + sleepTime + ")");
-            this.outputMutex.release();
             Thread.sleep(sleepTime);
         } catch (InterruptedException ie) {
             //ie.printStackTrace();

@@ -16,7 +16,7 @@ public class FoodCraft {
     private float time;
 
     /** The print stream used for logging output. */
-    private PrintStream out;
+    private ProtectedOutputStream out;
 
     /**
      * Constructor for the FoodCraft class.
@@ -26,7 +26,7 @@ public class FoodCraft {
      */
     public FoodCraft(float time, PrintStream out) {
         this.time = time;
-        this.out = out;
+        this.out = new ProtectedOutputStream(out);
     }
 
     /**
@@ -34,15 +34,14 @@ public class FoodCraft {
      */
     public void go() {
         Semaphore hungryMiners = new Semaphore(0);
-        Semaphore outputMutex = new Semaphore(1);
         Semaphore docksKey = new Semaphore(1);
         Thread foreman = new Thread(new Foreman(hungryMiners));
         Thread breadMessenger = new Thread(new Messenger(Food.BREAD, docksKey));
         Thread cheeseMessenger = new Thread(new Messenger(Food.CHEESE, docksKey));
         Thread bolognaMessenger = new Thread(new Messenger(Food.BOLOGNA, docksKey));
-        Thread breadMiner = new Thread(new Miner(Food.BREAD, this.out, outputMutex, hungryMiners));
-        Thread cheeseMiner = new Thread(new Miner(Food.CHEESE, this.out, outputMutex, hungryMiners));
-        Thread bolognaMiner = new Thread(new Miner(Food.BOLOGNA, this.out, outputMutex, hungryMiners));
+        Thread breadMiner = new Thread(new Miner(Food.BREAD, this.out, hungryMiners));
+        Thread cheeseMiner = new Thread(new Miner(Food.CHEESE, this.out, hungryMiners));
+        Thread bolognaMiner = new Thread(new Miner(Food.BOLOGNA, this.out, hungryMiners));
 
         foreman.start();
         breadMessenger.start();

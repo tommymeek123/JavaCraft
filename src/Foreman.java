@@ -8,7 +8,7 @@ import java.util.concurrent.Semaphore;
  * @version May, 2021
  */
 public class Foreman implements Runnable {
-    /** The docks this foreman oversees. */
+    /** Signal that the Miners want food. */
     private Semaphore hungryMiners;
 
     /**
