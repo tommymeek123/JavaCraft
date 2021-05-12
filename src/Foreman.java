@@ -27,8 +27,8 @@ public class Foreman implements Runnable {
      */
     public void drop() {
         Food[] supplies = Food.pickTwo();
-        this.out.println("---------------------\nDropping off: " + supplies[0] + "\nDropping off: "
-                + supplies[1] + "\n---------------------");
+        this.out.println("----------------------\nDropping off: " + supplies[0] + "\nDropping off: "
+                + supplies[1] + "\n----------------------");
         supplies[0].dropOff();
         supplies[1].dropOff();
     }

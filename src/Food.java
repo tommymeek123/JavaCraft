@@ -34,7 +34,7 @@ public enum Food {
     }
 
     /**
-     * This method just gets the other types of food that the messengers are
+     * This method just gets the other types of food.
      * @return Food array of other types of Food
      */
     public Food[] getOthers() {
@@ -57,7 +57,7 @@ public enum Food {
     }
 
     /**
-     * This method gets the other type of Food that messenger doesn't need
+     * This method gets the other type of Food.
      * @param second other Food of messenger
      * @return other Food messenger doesn't need
      */

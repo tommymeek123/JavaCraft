@@ -35,7 +35,7 @@ public class FoodCraft {
     public void go() {
         Semaphore hungryMiners = new Semaphore(0);
         Semaphore docksKey = new Semaphore(1);
-        Thread foreman = new Thread(new Foreman(hungryMiners, out));
+        Thread foreman = new Thread(new Foreman(hungryMiners, this.out));
         Thread breadMessenger = new Thread(new Messenger(Food.BREAD, docksKey));
         Thread cheeseMessenger = new Thread(new Messenger(Food.CHEESE, docksKey));
         Thread bolognaMessenger = new Thread(new Messenger(Food.BOLOGNA, docksKey));
@@ -45,6 +45,7 @@ public class FoodCraft {
 
         this.out.println("Food distribution will continue for: " + this.time + " seconds");
 
+        // Start all threads.
         foreman.start();
         breadMessenger.start();
         cheeseMessenger.start();
@@ -53,8 +54,8 @@ public class FoodCraft {
         cheeseMiner.start();
         bolognaMiner.start();
 
-
         if (this.time > 0) {
+            // wait the amount of time the user specified and terminate the threads.
             try {
                 //multiplying time by 1000 because sleep() wants milliseconds
                 Thread.sleep((long) (this.time * 1000));
@@ -62,7 +63,6 @@ public class FoodCraft {
                 e.printStackTrace();
                 System.exit(1);
             }
-
             foreman.interrupt();
             breadMessenger.interrupt();
             cheeseMessenger.interrupt();
