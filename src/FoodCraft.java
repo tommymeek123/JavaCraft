@@ -63,12 +63,19 @@ public class FoodCraft {
                 e.printStackTrace();
                 System.exit(1);
             }
+            this.out.println("Foreman is stopping.");
             foreman.interrupt();
+            this.out.println("Bread messenger is stopping.");
             breadMessenger.interrupt();
+            this.out.println("Cheese messenger is stopping.");
             cheeseMessenger.interrupt();
+            this.out.println("Bologna messenger is stopping.");
             bolognaMessenger.interrupt();
+            this.out.println("Bread miner is stopping.");
             breadMiner.interrupt();
+            this.out.println("Cheese miner is stopping.");
             cheeseMiner.interrupt();
+            this.out.println("Bologna miner is stopping.");
             bolognaMiner.interrupt();
         }
     }
