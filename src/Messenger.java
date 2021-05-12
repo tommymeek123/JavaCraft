@@ -56,7 +56,9 @@ public class Messenger implements Runnable {
             }
             this.key.release();
         } catch (InterruptedException ie) {
-            ie.printStackTrace();
+            //ie.printStackTrace();
+            System.out.println("Messengers Interrupted");
+            System.exit(0);
         }
     }
 
