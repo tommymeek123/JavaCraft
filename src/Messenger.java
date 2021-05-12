@@ -1,7 +1,8 @@
 import java.util.concurrent.Semaphore;
 
 /**
- * 
+ * This class represents our Messengers. They notify their respective miners
+ * when food is ready.
  *
  * @author Brett Dale
  * @author Tommy Meek
@@ -38,6 +39,10 @@ public class Messenger implements Runnable {
         this.key = key;
     }
 
+    /**
+     * This is helper method to guide the Messengers so they can get or drop
+     * off food for others
+     */
     private void coordinateDelivery() {
         try {
             this.key.acquire();
@@ -55,6 +60,10 @@ public class Messenger implements Runnable {
         }
     }
 
+    /**
+     * This method tells our Messengers to try and get food until the thread
+     * is interrupted
+     */
     @Override
     public void run() {
         while ( ! Thread.currentThread().isInterrupted()) {

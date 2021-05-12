@@ -18,12 +18,18 @@ public class Foreman implements Runnable {
         this.hungryMiners = mutex;
     }
 
+    /**
+     * Drops off food at drop off location
+     */
     public void drop() {
         Food[] supplies = Food.pickTwo();
         supplies[0].dropOff();
         supplies[1].dropOff();
     }
 
+    /**
+     * Method to listen for the Miners
+     */
     private void listenForMiners() {
         try {
             this.hungryMiners.acquire();
@@ -32,6 +38,9 @@ public class Foreman implements Runnable {
         }
     }
 
+    /**
+     * Runs the Foreman
+     */
     @Override
     public void run() {
         while ( ! Thread.currentThread().isInterrupted()) {

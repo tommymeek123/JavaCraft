@@ -40,14 +40,26 @@ public class Miner implements Runnable {
         this.hornOfForemanSummoning = horn;
     }
 
+    /**
+     * Sleeps Miners when making sandwiches
+     */
     public void makeFood() {
         this.sleep("MAKING sandwiches");
     }
 
+    /**
+     * Sleeps Miners when eating sandwiches
+     */
     public void eatFood() {
         this.sleep("EATING sandwiches");
     }
 
+    /**
+     * Assigns a random sleep timer then prints message displaying how long
+     * they will sleep and what activity they are doing
+     * @param activity String displaying if the Miners are EATING or MAKING
+     *                 sandwiches
+     */
     private void sleep(String activity) {
         Random rand = new Random();
         int sleepTime = rand.nextInt(MAX_SLEEP);
@@ -62,6 +74,9 @@ public class Miner implements Runnable {
         }
     }
 
+    /**
+     * Run method for Miner
+     */
     @Override
     public void run() {
         while ( ! Thread.currentThread().isInterrupted()) {

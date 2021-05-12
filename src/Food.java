@@ -33,6 +33,10 @@ public enum Food {
         this.commonRoom = new Semaphore(0);
     }
 
+    /**
+     * This method just gets the other types of food that the messengers are
+     * @return Food array of other types of Food
+     */
     public Food[] getOthers() {
         Food[] food = new Food[2];
         switch(this) {
@@ -52,6 +56,11 @@ public enum Food {
         return food;
     }
 
+    /**
+     * This method gets the other type of Food that messenger doesn't need
+     * @param second other Food of messenger
+     * @return other Food messenger doesn't need
+     */
     public Food getOtherOne(Food second) {
         Food otherFood = null;
         if (this == CHEESE && second == BREAD || this == BREAD && second == CHEESE) {
@@ -64,6 +73,10 @@ public enum Food {
         return otherFood;
     }
 
+    /**
+     * Method to pick two Food types
+     * @return Array of two different Food types
+     */
     public static Food[] pickTwo() {
         Food[] food = new Food[2];
         Random rand = new Random();
@@ -85,10 +98,16 @@ public enum Food {
         return food;
     }
 
+    /**
+     * Method to send signal to messenger
+     */
     public void dropOff() {
         this.foremanToMessengerSignal.release();
     }
 
+    /**
+     * Method to send signal to messenger then try and go in
+     */
     public void pickUp() {
         try {
             this.foremanToMessengerSignal.acquire();
@@ -97,10 +116,16 @@ public enum Food {
         }
     }
 
+    /**
+     * Method to signal Miners to eat
+     */
     public void deliver() {
         this.messengerToMinerSignal.release();
     }
 
+    /**
+     * Method to signal Miners
+     */
     public void receive() {
         try {
             this.messengerToMinerSignal.acquire();
@@ -109,18 +134,32 @@ public enum Food {
         }
     }
 
+    /**
+     *
+     * @return true if Messengers
+     */
     public boolean find() {
         return this.foremanToMessengerSignal.tryAcquire() || this.commonRoom.tryAcquire();
     }
 
+    /**
+     * Method to get Food in common room
+     * @return
+     */
     public boolean findInCommonRoom() {
         return this.commonRoom.tryAcquire();
     }
 
+    /**
+     * puts Food in common room
+     */
     public void putInCommonRoom() {
         this.commonRoom.release();
     }
 
+    /**
+     * Another method to get Food from common room
+     */
     public void getFromCommonRoom() {
         try {
             this.commonRoom.acquire();
