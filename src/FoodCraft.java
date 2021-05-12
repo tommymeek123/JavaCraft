@@ -47,9 +47,6 @@ public class FoodCraft {
         Thread cheeseMiner = new Thread(new Miner(Food.CHEESE, this.out, outputMutex, hungryMiners));
         Thread bolognaMiner = new Thread(new Miner(Food.BOLOGNA, this.out, outputMutex, hungryMiners));
 
-        ExecutorService threadPool = Executors.newFixedThreadPool(7);
-        threadPool.submit(foreman);
-
         foreman.start();
         breadMessenger.start();
         cheeseMessenger.start();
@@ -60,6 +57,7 @@ public class FoodCraft {
 
         try {
             System.out.println("Main Thread gets slept");
+            //multiplying time by 1000 because sleep() wants milliseconds
             Thread.sleep((long) (this.time * 1000));
             System.out.println("Main Thread is awake");
         } catch (InterruptedException e) {
