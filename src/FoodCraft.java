@@ -35,7 +35,7 @@ public class FoodCraft {
     public void go() {
         Semaphore hungryMiners = new Semaphore(0);
         Semaphore docksKey = new Semaphore(1);
-        Thread foreman = new Thread(new Foreman(hungryMiners));
+        Thread foreman = new Thread(new Foreman(hungryMiners, this.out));
         Thread breadMessenger = new Thread(new Messenger(Food.BREAD, docksKey));
         Thread cheeseMessenger = new Thread(new Messenger(Food.CHEESE, docksKey));
         Thread bolognaMessenger = new Thread(new Messenger(Food.BOLOGNA, docksKey));
@@ -43,6 +43,9 @@ public class FoodCraft {
         Thread cheeseMiner = new Thread(new Miner(Food.CHEESE, this.out, hungryMiners));
         Thread bolognaMiner = new Thread(new Miner(Food.BOLOGNA, this.out, hungryMiners));
 
+        this.out.println("Food distribution will continue for: " + this.time + " seconds");
+
+        // Start all threads.
         foreman.start();
         breadMessenger.start();
         cheeseMessenger.start();
@@ -51,22 +54,22 @@ public class FoodCraft {
         cheeseMiner.start();
         bolognaMiner.start();
 
-        try {
-            System.out.println("Main Thread gets slept");
-            //multiplying time by 1000 because sleep() wants milliseconds
-            Thread.sleep((long) (this.time * 1000));
-            System.out.println("Main Thread is awake");
-        } catch (InterruptedException e) {
-            System.out.println("Main thread woke up");
-            e.printStackTrace();
+        if (this.time > 0) {
+            // wait the amount of time the user specified and terminate the threads.
+            try {
+                //multiplying time by 1000 because sleep() wants milliseconds
+                Thread.sleep((long) (this.time * 1000));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+            foreman.interrupt();
+            breadMessenger.interrupt();
+            cheeseMessenger.interrupt();
+            bolognaMessenger.interrupt();
+            breadMiner.interrupt();
+            cheeseMiner.interrupt();
+            bolognaMiner.interrupt();
         }
-
-        foreman.interrupt();
-        breadMessenger.interrupt();
-        cheeseMessenger.interrupt();
-        bolognaMessenger.interrupt();
-        breadMiner.interrupt();
-        cheeseMiner.interrupt();
-        bolognaMiner.interrupt();
     }
 }

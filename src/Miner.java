@@ -1,4 +1,3 @@
-import java.io.PrintStream;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
 
@@ -24,7 +23,7 @@ public class Miner implements Runnable {
 
     /**
      * Constructor for the miner.
-     *  @param guild The food this miner specializes in mining.
+     * @param guild The food this miner specializes in mining.
      * @param out The print stream used for logging output.
      * @param horn A +1 magical horn that, when blown, will summon a level 12 Foreman with a feast.
      */
@@ -51,19 +50,19 @@ public class Miner implements Runnable {
     /**
      * Assigns a random sleep timer then prints message displaying how long
      * they will sleep and what activity they are doing
-     * @param activity String displaying if the Miners are EATING or MAKING
-     *                 sandwiches
+     * @param activity String displaying if the Miners are EATING or MAKING sandwiches
      */
     private void sleep(String activity) {
         Random rand = new Random();
         int sleepTime = rand.nextInt(MAX_SLEEP);
         long id = Thread.currentThread().getId();
         try {
-            this.out.println(this.guild + " miners:(" + id + ") are " + activity + " Wait(" + sleepTime + ")");
+            this.out.println(this.guild + " miners:(" + id + ") have started " + activity
+                    + " Wait(" + sleepTime + ")");
             Thread.sleep(sleepTime);
+            this.out.println(this.guild + " miners:(" + id + ") have finished "
+                    + activity + " Wait(" + sleepTime + ")");
         } catch (InterruptedException ie) {
-            //ie.printStackTrace();
-            //System.out.println("Miners Interrupted");
             System.exit(0);
         }
     }
@@ -74,7 +73,9 @@ public class Miner implements Runnable {
     @Override
     public void run() {
         while ( ! Thread.currentThread().isInterrupted()) {
+            this.out.println("\n" + this.guild + " miners are waiting for food\n");
             this.guild.receive();
+            this.out.println(this.guild + " miners got their food and are calling the foreman");
             this.hornOfForemanSummoning.release();
             this.makeFood();
             this.eatFood();

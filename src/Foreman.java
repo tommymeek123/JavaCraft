@@ -11,11 +11,15 @@ public class Foreman implements Runnable {
     /** Signal that the Miners want food. */
     private Semaphore hungryMiners;
 
+    /** The print stream used for logging output. */
+    private ProtectedOutputStream out;
+
     /**
      * Constructor for the Foreman.
      */
-    public Foreman(Semaphore mutex) {
+    public Foreman(Semaphore mutex, ProtectedOutputStream out) {
         this.hungryMiners = mutex;
+        this.out = out;
     }
 
     /**
@@ -23,6 +27,8 @@ public class Foreman implements Runnable {
      */
     public void drop() {
         Food[] supplies = Food.pickTwo();
+        this.out.println("----------------------\nDropping off: " + supplies[0] + "\nDropping off: "
+                + supplies[1] + "\n----------------------");
         supplies[0].dropOff();
         supplies[1].dropOff();
     }
@@ -34,8 +40,6 @@ public class Foreman implements Runnable {
         try {
             this.hungryMiners.acquire();
         } catch (InterruptedException ie) {
-            //ie.printStackTrace();
-            //System.out.println("Foreman Interrupted");
             System.exit(0);
         }
     }

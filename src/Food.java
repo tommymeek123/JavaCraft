@@ -34,7 +34,7 @@ public enum Food {
     }
 
     /**
-     * This method just gets the other types of food that the messengers are
+     * This method just gets the other types of food.
      * @return Food array of other types of Food
      */
     public Food[] getOthers() {
@@ -57,7 +57,7 @@ public enum Food {
     }
 
     /**
-     * This method gets the other type of Food that messenger doesn't need
+     * This method gets the other type of Food.
      * @param second other Food of messenger
      * @return other Food messenger doesn't need
      */
@@ -112,7 +112,6 @@ public enum Food {
         try {
             this.foremanToMessengerSignal.acquire();
         } catch (InterruptedException ie) {
-            //ie.printStackTrace();
             System.exit(0);
         }
     }
@@ -131,8 +130,6 @@ public enum Food {
         try {
             this.messengerToMinerSignal.acquire();
         } catch (InterruptedException ie) {
-            //ie.printStackTrace();
-            //System.out.println("Messenger to Miner signal interrupted");
             System.exit(0);
         }
     }
@@ -146,7 +143,7 @@ public enum Food {
     }
 
     /**
-     * Method to get Food in common room
+     * Method to get Food in common room if it is there
      * @return true if food was found, false otherwise
      */
     public boolean findInCommonRoom() {
@@ -167,7 +164,7 @@ public enum Food {
         try {
             this.commonRoom.acquire();
         } catch (InterruptedException ie) {
-            ie.printStackTrace();
+            System.exit(0);
         }
     }
 
