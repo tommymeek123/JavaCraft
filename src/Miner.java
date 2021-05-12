@@ -71,7 +71,7 @@ public class Miner implements Runnable {
             Thread.sleep(sleepTime);
         } catch (InterruptedException ie) {
             //ie.printStackTrace();
-            System.out.println("Miners Interrupted");
+            //System.out.println("Miners Interrupted");
             System.exit(0);
         }
     }

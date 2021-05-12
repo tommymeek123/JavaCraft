@@ -35,7 +35,7 @@ public class Foreman implements Runnable {
             this.hungryMiners.acquire();
         } catch (InterruptedException ie) {
             //ie.printStackTrace();
-            System.out.println("Foreman Interrupted");
+            //System.out.println("Foreman Interrupted");
             System.exit(0);
         }
     }

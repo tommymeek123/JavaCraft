@@ -132,7 +132,7 @@ public enum Food {
             this.messengerToMinerSignal.acquire();
         } catch (InterruptedException ie) {
             //ie.printStackTrace();
-            System.out.println("Messenger to Miner signal interrupted");
+            //System.out.println("Messenger to Miner signal interrupted");
             System.exit(0);
         }
     }
