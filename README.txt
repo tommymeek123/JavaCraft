@@ -12,7 +12,7 @@ The first command line argument is the time, in seconds, the program should run.
 The second is F if output should be displayed to the console or T if output
 should be logged to a file. The file created will be named "log.txt".
 
-This project is a StarCraft style simulation on remote planet in a distant galaxy
+This project is a StarCraft style simulation on a remote planet in a distant galaxy
 where the cheese, bread, and bologna mines are full of bounty. The miners are a
 hungry bunch though, so the foreman, with the help of his messengers, must
 coordinate the dilivery of food for the miners' lunch. This project takes advantage
